@@ -1,5 +1,6 @@
 #While Looping
 i = 0
+r = 0
 
 #Empty list
 elements = []
