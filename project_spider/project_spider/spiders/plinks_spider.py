@@ -4,7 +4,12 @@ import urllib2
 
 # Open database connection
 #db = MySQLdb.connect("localhost", "root", "", "shop_trade_online", unix_socket = '/opt/lampp/var/mysql/mysql.sock')
-db = MySQLdb.connect( host = 'localhost', user = 'root', passwd = '', db = 'web_crawler', unix_socket = '/opt/lampp/var/mysql/mysql.sock')
+try:
+    db = MySQLdb.connect( host = 'localhost', user = 'root', passwd = '', db = 'web_crawler', unix_socket = '/opt/lampp/var/mysql/mysql.sock')
+    print "Db connected"
+except Exception as e:
+    print "Cannot connect to db"
+    print e
 
 # prepare a cursor object using cursor() method
 cursor = db.cursor()

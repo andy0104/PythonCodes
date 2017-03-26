@@ -89,7 +89,16 @@ class CtlinksSpider(scrapy.Spider):
             link_url = str(tag.css('td a::attr(href)').extract_first())
             if link_url is not None:
                 link_url = response.urljoin(link_url)
-                link_url = self.get_final_url(link_url)
+                tmp_url = link_url
+                print tmp_url
+
+                #link_url = self.get_final_url(link_url)
+                if tmp_url != link_url:
+                    final_url_reached = '1'
+                else:
+                    final_url_reached = '0'
+
+                print 'Final url reached:' + final_url_reached
             else:
                 link_url = ''
 
@@ -113,9 +122,9 @@ class CtlinksSpider(scrapy.Spider):
                 link_type = ''
 
             # Prepare SQL query to INSERT a record into the database.
-            sql = "INSERT INTO city_links(city_id, link_title, link_url, link_desc, link_type) \
-                   VALUES ('%s', '%s', '%s', '%s', '%s')" % \
-                   (ct_id, link_title, link_url, link_desc, link_type)
+            sql = "INSERT INTO city_links(city_id, link_title, link_url, link_desc, link_type, final_url_reached) \
+                   VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % \
+                   (ct_id, link_title, link_url, link_desc, link_type, final_url_reached)
             print "Executing...."
 
             try:

@@ -163,7 +163,7 @@ class ClinksSpider(scrapy.Spider):
                 tmp_url = link_url
                 print tmp_url
 
-                link_url = self.get_final_url(link_url)
+                #link_url = self.get_final_url(link_url)
 
                 if tmp_url != link_url:
                     final_url_reached = '1'

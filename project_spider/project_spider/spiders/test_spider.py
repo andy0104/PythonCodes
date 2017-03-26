@@ -1,23 +1,15 @@
 import scrapy
 import MySQLdb
 
-try:
-    # Open database connection
-    #db = MySQLdb.connect("localhost", "root", "", "shop_trade_online", unix_socket = '/opt/lampp/var/mysql/mysql.sock')
-    db = MySQLdb.connect( host = 'localhost', user = 'root', passwd = '', db = 'web_crawler', unix_socket = '/opt/lampp/var/mysql/mysql.sock')
-    print "Db connected"
-except:
-    print "Db not connected"
+# Open database connection
+#db = MySQLdb.connect("localhost", "root", "", "shop_trade_online", unix_socket = '/opt/lampp/var/mysql/mysql.sock')
+#db = MySQLdb.connect( host = 'localhost', user = 'root', passwd = '', db = 'web_crawler', unix_socket = '/opt/lampp/var/mysql/mysql.sock')
 
-try:
-    # prepare a cursor object using cursor() method
-    cursor = db.cursor()
-    print "Cursor created"
-except:
-    print "Cannot create cursor"
+# prepare a cursor object using cursor() method
+#cursor = db.cursor()
 
-class PsearchSpider(scrapy.Spider):
-    name = "psearch"
+class TestSpider(scrapy.Spider):
+    name = "test"
     state_id = 0
 
     def start_requests(self):
@@ -54,19 +46,19 @@ class PsearchSpider(scrapy.Spider):
                    VALUES ('%s', '%s')" % \
                    (state_name, state_url)
 
-            try:
-               # Execute the SQL command
-               cursor.execute(sql)
-
-               #Get last insert id
-               self.state_id = cursor.lastrowid
-
-               # Commit your changes in the database
-               db.commit()
-
-            except:
-               # Rollback in case there is any error
-               db.rollback()
+            # try:
+            #    # Execute the SQL command
+            #    cursor.execute(sql)
+            #
+            #    #Get last insert id
+            #    self.state_id = cursor.lastrowid
+            #
+            #    # Commit your changes in the database
+            #    db.commit()
+            #
+            # except:
+            #    # Rollback in case there is any error
+            #    db.rollback()
 
             yield {
                 'id': self.state_id,
@@ -83,12 +75,12 @@ class PsearchSpider(scrapy.Spider):
                state_url = '%s'" % \
                (response.url)
 
-        try:
-            cursor.execute(sql)
-            result = cursor.fetchone()
-            st_id = result[0]
-        except:
-            print "State url not matched"
+        # try:
+        #     cursor.execute(sql)
+        #     result = cursor.fetchone()
+        #     st_id = result[0]
+        # except:
+        #     print "State url not matched"
 
         county_list = []
 
@@ -108,19 +100,19 @@ class PsearchSpider(scrapy.Spider):
                    VALUES ('%s', '%s', '%s')" % \
                    (st_id, str(tag.css('a::text').extract_first().strip()), county_url)
 
-            try:
-               # Execute the SQL command
-               cursor.execute(sql)
-
-               #Get last insert id
-               self.county_id = cursor.lastrowid
-
-               # Commit your changes in the database
-               db.commit()
-
-            except:
-               # Rollback in case there is any error
-               db.rollback()
+            # try:
+            #    # Execute the SQL command
+            #    cursor.execute(sql)
+            #
+            #    #Get last insert id
+            #    self.county_id = cursor.lastrowid
+            #
+            #    # Commit your changes in the database
+            #    db.commit()
+            #
+            # except:
+            #    # Rollback in case there is any error
+            #    db.rollback()
 
             c_in = {
                 'state_id': st_id,
@@ -141,13 +133,13 @@ class PsearchSpider(scrapy.Spider):
                county_url = '%s'" % \
                (response.url)
 
-        try:
-            cursor.execute(sql)
-            result = cursor.fetchone()
-            county_id = result[0]
-            county_state_id = result[1]
-        except:
-            print "County url not matched"
+        # try:
+        #     cursor.execute(sql)
+        #     result = cursor.fetchone()
+        #     county_id = result[0]
+        #     county_state_id = result[1]
+        # except:
+        #     print "County url not matched"
 
         county_list = []
         for tag in response.css('ul.link-list li'):
@@ -161,19 +153,19 @@ class PsearchSpider(scrapy.Spider):
                    VALUES ('%s', '%s', '%s', '%s')" % \
                    (county_state_id, county_id, str(tag.css('a::text').extract_first().strip()), city_url)
 
-            try:
-               # Execute the SQL command
-               cursor.execute(sql)
-
-               #Get last insert id
-               self.city_id = cursor.lastrowid
-
-               # Commit your changes in the database
-               db.commit()
-
-            except:
-               # Rollback in case there is any error
-               db.rollback()
+            # try:
+            #    # Execute the SQL command
+            #    cursor.execute(sql)
+            #
+            #    #Get last insert id
+            #    self.city_id = cursor.lastrowid
+            #
+            #    # Commit your changes in the database
+            #    db.commit()
+            #
+            # except:
+            #    # Rollback in case there is any error
+            #    db.rollback()
 
             c_in = {
                 'state_id': county_state_id,
