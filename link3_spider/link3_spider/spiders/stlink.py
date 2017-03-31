@@ -23,7 +23,15 @@ class StlinkSpider(scrapy.Spider):
     #start_urls = ['http://example.com/']
 
     def start_requests(self):
-        
+        sql_truc = "TRUNCATE TABLE state_links"
+
+        try:
+            cursor.execute(sql_truc)
+            db.commit()
+        except:
+            print "Error truncating state links table"
+            db.rollback()
+
     	sql_state = "SELECT id, state_name, state_url FROM state ORDER BY id ASC"
 
     	try:
@@ -54,8 +62,8 @@ class StlinkSpider(scrapy.Spider):
     		print "Error fetching state with url ", e
 
         for tag in response.css('div.panel-body ul.content_directory li'):
-        	link_url = str(tag.css('h4 a::text').extract_first().strip())
-        	link_title = str(tag.css('h4 a::attr(href)').extract_first().strip())
+        	link_title = str(tag.css('h4 a::text').extract_first().strip())
+        	link_url = str(tag.css('h4 a::attr(href)').extract_first().strip())
         	link_desc = str(tag.css('span::text').extract_first().strip())
         	
         	sql_ins = "INSERT INTO state_links(state_id, link_title, link_url, link_desc, final_url_reached) \
